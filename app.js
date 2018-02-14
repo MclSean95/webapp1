@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var session = require('express-session');
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+var url = "mongodb://Sean:1234@ds011745.mlab.com:11745/gameslib";
 
 var app = express();
 
@@ -48,7 +48,7 @@ passport.use(new LocalStrategy({
 		MongoClient.connect(url, function(err, db){
 			if(err) throw err;
 			
-			var dbObj = db.db("users");
+			var dbObj = db.db("gameslib");
 			
 			dbObj.collection("users").findOne({username:username}, function(err, results){
 				if(results.password === password){
@@ -80,7 +80,7 @@ app.get("/", ensureAuthenticated, function(req, res){
 	MongoClient.connect(url, function(err, db){
 		if(err) throw err;
 		
-		var dbObj = db.db("games");
+		var dbObj = db.db("gameslib");
 		
 		dbObj.collection("games").find().toArray(function(err, results){
 			console.log("Site served");
@@ -108,7 +108,7 @@ app.post("/new-entry", function(req, response){
 	MongoClient.connect(url, function(err, db){
 		if(err) throw err;
 		
-		var dbObj = db.db("games");
+		var dbObj = db.db("gameslib");
 		
 		dbObj.collection("games").save(req.body, function(err, result){
 			console.log("Data saved");
@@ -129,7 +129,7 @@ app.post("/sign-up", function(request, response){
 	MongoClient.connect(url, function(err, db){
 		if(err) throw err;
 		
-		var dbObj = db.db("users");
+		var dbObj = db.db("gameslib");
 		
 		var user = {
 			username: request.body.username,
@@ -161,6 +161,6 @@ app.use(function(req, res){
 	res.status(404).render("404");
 });
 
-http.createServer(app).listen(3000, function(){
+http.createServer(app).listen(8081, function(){
 	console.log("Game libray server started on port 3000");
 });
